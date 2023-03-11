@@ -1,0 +1,49 @@
+image: Visual Studio 2019
+version: '{build}'
+pull_requests:
+  do_not_increment_build_number: true
+branches:
+  only:
+  - master
+  - develop
+nuget:
+  disable_publish_on_pr: true
+build_script:
+- ps: .\build.ps1
+test: off
+artifacts:
+- path: .\artifacts\*.nupkg
+  name: NuGet
+deploy:
+- provider: NuGet
+  server: https://ci.appveyor.com/nuget/radek41-3uj048yghh6h
+  api_key:
+    secure: N4Ceb4PGYD3hKN+N2ZkaXtocmrZeUb4jBrFLr/tvSzc=
+  skip_symbols: true
+  on:
+    branch: master
+- provider: NuGet
+  server: https://ci.appveyor.com/nuget/radek41-3uj048yghh6h
+  api_key:
+    secure: N4Ceb4PGYD3hKN+N2ZkaXtocmrZeUb4jBrFLr/tvSzc=
+  skip_symbols: true
+  on:
+    branch: develop
+- provider: NuGet
+  name: production
+  api_key:
+    secure: CeFoy3jmWQuzjjLDNhH8aE9liWZf8J2HUKBn8qJP/+fMQUdogxjWbGMRQQHai8Fx
+  on:
+    branch: master
+    APPVEYOR_REPO_TAG: true
+- provider: GitHub
+  release: FFMediaToolkit-v$(appveyor_build_version)
+  description: 'Release description'
+  auth_token:
+    secure: /GA3G04CwIagRgruOePiVXyhDo2QZtJzuU6wEzBPQfV0cbN3FVoIIFilPFCpg9lE
+  artifact: /.*\.nupkg/
+  draft: true
+  prerelease: false
+  on:
+    branch: master
+    APPVEYOR_REPO_TAG: true

@@ -1,0 +1,164 @@
+﻿<Metro:MetroWindow x:Class="VedioEditor.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:Metro="clr-namespace:AduSkin.Controls.Metro;assembly=AduSkin"
+        xmlns:AduOpenLink="clr-namespace:AduSkin.Interactivity;assembly=AduSkin"
+        xmlns:timeLine="clr-namespace:VideoStateAxis;assembly=VideoStateAxis"
+        xmlns:local="clr-namespace:VedioEditor"
+        mc:Ignorable="d"
+        BorderThickness="0"
+        Background="#FFF"
+        Title="MainWindow" Height="800" Width="1200">
+    <Metro:MetroWindow.Resources>
+        <local:ValueStringConverter x:Key="vsconverter"/>
+        <local:PercentageStringConverter x:Key="psconverter" />
+        <local:CPercentageStringConverter x:Key="cpsconverter" />
+    </Metro:MetroWindow.Resources>
+    <Metro:MetroWindow.Menu >
+        <Metro:MetroTitleMenu Height="40">
+            <Metro:MetroTitleMenuItem Header="导入" Background="#FFF0F0F0">
+                <MenuItem Style="{StaticResource MenuItem_NonStyle}" Height="30" Width="220" >
+                    <MenuItem.Header>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="62"/>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="60" />
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Content="精准度" HorizontalContentAlignment="Right"></Label>
+                            <Metro:AduSlider Grid.Column="1" IsSnapToTickEnabled ="True" SmallChange="1" Minimum="1" Maximum="99" Value="85" x:Name="PART_Accuray"></Metro:AduSlider>
+                            <Label Grid.Column="2" Content="{Binding ElementName=PART_Accuray, Path=Value, Converter={StaticResource ResourceKey=vsconverter}}"></Label>
+                        </Grid>
+                    </MenuItem.Header>
+                </MenuItem>
+                <MenuItem Style="{StaticResource MenuItem_NonStyle}" Height="30" Width="220" >
+                    <MenuItem.Header>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="62"/>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="60" />
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Content="剔除小于" HorizontalContentAlignment="Right"></Label>
+                            <Metro:AduSlider Grid.Column="1" IsSnapToTickEnabled ="True" SmallChange="1" Minimum="0" Maximum="100" Value="5" x:Name="PART_VaildPixel"></Metro:AduSlider>
+                            <Label Grid.Column="2" Content="{Binding ElementName=PART_VaildPixel, Path=Value, Converter={StaticResource ResourceKey=vsconverter}}"></Label>
+                        </Grid>
+                    </MenuItem.Header>
+                </MenuItem>
+                <MenuItem Style="{StaticResource MenuItem_NonStyle}" Height="30" Width="220" >
+                    <MenuItem.Header>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="62"/>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="60" />
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Content="二值阈值" HorizontalContentAlignment="Right"></Label>
+                            <Metro:AduSlider Grid.Column="1" Minimum="1" IsSnapToTickEnabled ="True" SmallChange="1" Maximum="255" Value="225" x:Name="PART_Threshold"></Metro:AduSlider>
+                            <Label Grid.Column="2" Content="{Binding ElementName=PART_Threshold, Path=Value, Converter={StaticResource ResourceKey=vsconverter}}"></Label>
+                        </Grid>
+                    </MenuItem.Header>
+                </MenuItem>
+                <MenuItem Style="{StaticResource MenuItem_NonStyle}" Height="30" Width="220" >
+                    <MenuItem.Header>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="62"/>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="60" />
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Content="字幕高度" HorizontalContentAlignment="Right"></Label>
+                            <Metro:AduSlider Grid.Column="1" Minimum="0.05" Maximum="1" Value="0.10" x:Name="PART_SubTitle"></Metro:AduSlider>
+                            <Label Grid.Column="2" Content="{Binding ElementName=PART_SubTitle, Path=Value, Converter={StaticResource ResourceKey=psconverter}}"></Label>
+                        </Grid>
+                    </MenuItem.Header>
+                </MenuItem>
+                <MenuItem Style="{StaticResource MenuItem_NonStyle}" Height="30" Width="220" >
+                    <MenuItem.Header>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="62"/>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="60" />
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Content="音轨范围" HorizontalContentAlignment="Right"></Label>
+                            <Metro:AduSlider Grid.Column="1" Minimum="0" Maximum="1" Value="0.02" x:Name="PART_SubAudio"></Metro:AduSlider>
+                            <Label Grid.Column="2" Content="{Binding ElementName=PART_SubAudio, Path=Value, Converter={StaticResource ResourceKey=psconverter}}"></Label>
+                        </Grid>
+                    </MenuItem.Header>
+                </MenuItem>
+                <MenuItem Style="{StaticResource MenuItem_NonStyle}" Height="30" >
+                    <MenuItem.Header>
+                        <Metro:AduCheckBox Content="剔除分段噪音" x:Name="PART_NOISE" IsChecked="True"></Metro:AduCheckBox>
+                    </MenuItem.Header>
+                </MenuItem>
+                <MenuItem Style="{StaticResource MenuItem_NonStyle}" Height="30" >
+                    <MenuItem.Header>
+                        <Metro:AduCheckBox Content="Orc校验" x:Name="PART_ORC"></Metro:AduCheckBox>
+                    </MenuItem.Header>
+                </MenuItem>
+                <MenuItem Style="{StaticResource MenuItem_NonStyle}" Margin="3">
+                    <MenuItem.Header>
+                        <Metro:MetroButton Content="导入媒体文件" Click="PART_Import_Click"></Metro:MetroButton>
+                    </MenuItem.Header>
+                </MenuItem>
+            </Metro:MetroTitleMenuItem>
+            <Metro:MetroTitleMenuItem Header="导出" Background="#FFF0F0F0">
+                <MenuItem Style="{StaticResource MenuItem_NonStyle}" Height="30" Width="220">
+                    <MenuItem.Header>
+                        <Metro:AduCheckBox Content="导出无音轨段" x:Name="PART_Export_Opations_HasAudio"></Metro:AduCheckBox>
+                    </MenuItem.Header>
+                </MenuItem>
+                <MenuItem Style="{StaticResource MenuItem_NonStyle}" Height="30" Width="220">
+                    <MenuItem.Header>
+                        <Metro:AduCheckBox Content="导出无字幕段" x:Name="PART_Export_Opations_HasSubtitle"></Metro:AduCheckBox>
+                    </MenuItem.Header>
+                </MenuItem>
+
+                <MenuItem Style="{StaticResource MenuItem_NonStyle}" Margin="3" Width="220">
+                    <MenuItem.Header>
+                        <Metro:MetroButton Content="批量导出" x:Name="PART_Export" Click="PART_Export_Click"></Metro:MetroButton>
+                    </MenuItem.Header>
+                </MenuItem>
+
+            </Metro:MetroTitleMenuItem>
+            <Metro:MetroTitleMenuItem Header="小工具" Background="#FFF0F0F0">
+                <Metro:MetroMenuItem Header="提取音频" x:Name="PART_Export_Audio" Click="PART_Export_Audio_Click"></Metro:MetroMenuItem>
+                <Metro:MetroMenuItem Header="合并视频" x:Name="PART_Union_Media" Click="PART_Union_Media_Click"></Metro:MetroMenuItem>
+                <Metro:MetroMenuItem Header="横屏转竖屏" x:Name="PART_Vedio_Trun" Click="PART_Vedio_Trun_Click"></Metro:MetroMenuItem>
+
+                <MenuItem Style="{StaticResource MenuItem_NonStyle}" Height="30" Width="220" >
+                    <MenuItem.Header>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="62"/>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="60" />
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Content="调速" HorizontalContentAlignment="Right"></Label>
+                            <Metro:AduSlider x:Name="PART_FrameRate" Grid.Column="1" Minimum="0.5" Maximum="4" Value="1"></Metro:AduSlider>
+                            <Label Grid.Column="2" Content="{Binding ElementName=PART_FrameRate, Path=Value, Converter={StaticResource ResourceKey=psconverter}}"></Label>
+                        </Grid>
+                    </MenuItem.Header>
+                </MenuItem>
+                <Metro:MetroMenuItem Header="视频调速" x:Name="PART_Vedio_Setpts" Click="PART_Vedio_Setpts_Click"></Metro:MetroMenuItem>
+            </Metro:MetroTitleMenuItem>
+        </Metro:MetroTitleMenu>
+    </Metro:MetroWindow.Menu>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="220"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="208"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Metro:AduDataGrid Grid.Row="0" Grid.Column="0" x:Name="PART_List" AutoGenerateColumns="True" />
+        <local:Preview Grid.Row="0" Grid.Column="1" x:Name="PART_Preview" />
+        <timeLine:VideoStateAxisControl Grid.Row="1" Grid.ColumnSpan="2" x:Name="PART_TimeLine" Margin="-10"></timeLine:VideoStateAxisControl>
+    </Grid>
+</Metro:MetroWindow>
